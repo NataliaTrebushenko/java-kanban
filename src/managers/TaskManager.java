@@ -16,7 +16,7 @@ public class TaskManager {
 
     private int id = 0;
 
-    public int getId() {
+    private int getId() {
         id++;
         return id;
     }
@@ -40,6 +40,7 @@ public class TaskManager {
     public void deleteSubtaskAll() {
         subtasks.clear();
         for (Epic epic : getEpics()) {
+            epic.getSubtasks().clear();
             updateEpicStatus(epic);
         }
     }
@@ -50,30 +51,15 @@ public class TaskManager {
     }
 
     public Task getTaskById(int id) {
-        boolean isTaskKeyExist = tasks.containsKey(id);
-        if (isTaskKeyExist) {
-            return tasks.get(id);
-        }
-        System.out.println("По данному id =" + id + " Task не найден!");
-        return null;
+        return tasks.get(id);
     }
 
     public Epic getEpicById(int id) {
-        boolean isEpicKeyExist = epics.containsKey(id);
-        if (isEpicKeyExist) {
-            return epics.get(id);
-        }
-        System.out.println("По данному id =" + id + " Epic не найден!");
-        return null;
+        return epics.get(id);
     }
 
     public Subtask getSubtaskById(int id) {
-        boolean isSubtaskKeyExist = subtasks.containsKey(id);
-        if (isSubtaskKeyExist) {
-            return subtasks.get(id);
-        }
-        System.out.println("По данному id =" + id + " Subtask не найден!");
-        return null;
+        return subtasks.get(id);
     }
 
 
@@ -101,60 +87,43 @@ public class TaskManager {
             return;
         }
         Epic epic = epics.get(epicId);
-        epic.createSubtask(subtask);
+        epic.addSubtask(subtask);
+        updateEpicStatus(epic);
         subtask.setId(getId());
         subtasks.put(subtask.getId(), subtask);
     }
 
 
     public void updateTask(Task task) {
-        if (task == null) {
-            System.out.println("Данная задача отсутствует!");
+        if (task == null || !tasks.containsKey(task.getId())) {
+            System.out.println("Неверная задача");
             return;
         }
-        int taskId = task.getId();
-        var findTask = getTaskById(taskId);
-        if (findTask == null) {
-            System.out.println("По данному ID, задача не найдена!");
-            return;
-        }
-        findTask.setStatus(task.getStatus());
-        findTask.setDescription(task.getDescription());
-        findTask.setName(task.getDescription());
+        tasks.put(task.getId(), task);
     }
 
     public void updateEpic(Epic epic) {
-        if (epic == null) {
-            System.out.println("Данный Epic отсутствует!");
+        if (epic == null || !epics.containsKey(epic.getId())) {
+            System.out.println("Неверная задача");
             return;
         }
         var findEpic = getEpicById(epic.getId());
-        if (findEpic == null) {
-            System.out.println("По данному ID, Epic не найден!");
-            return;
-        }
         findEpic.setName(epic.getName());
         findEpic.setDescription(epic.getDescription());
     }
 
     public void updateSubtask(Subtask subtask) {
-        if (subtask == null) {
-            System.out.println("Данный Subtask отсутствует!");
+        if (subtask == null || !subtasks.containsKey(subtask.getId())) {
+            System.out.println("Неверная задача");
             return;
         }
-        var findSubtask = getSubtaskById(subtask.getId());
-        if (findSubtask == null) {
-            System.out.println("По данному ID, Epic не найден!");
-            return;
-        }
-        findSubtask.setName(subtask.getName());
-        findSubtask.setDescription(subtask.getDescription());
-        findSubtask.setStatus(subtask.getStatus());
+        subtasks.put(subtask.getId(), subtask);
         var epic = getEpicById(subtask.getEpicId());
+        epic.addSubtask(subtask);
         updateEpicStatus(epic);
     }
 
-    public void updateEpicStatus(Epic epic) {
+    private void updateEpicStatus(Epic epic) {
         if (epic == null) {
             System.out.println("Не передано.");
             return;
@@ -189,15 +158,11 @@ public class TaskManager {
     }
 
     public void deleteTaskById(int id) {
-        boolean isTaskKeyExist = tasks.containsKey(id);
-        if (isTaskKeyExist) {
-            tasks.remove(id);
-        }
+        tasks.remove(id);
     }
 
     public void deleteEpicById(int id) {
-        boolean isEpicKeyExist = epics.containsKey(id);
-        if (isEpicKeyExist) {
+        if (epics.containsKey(id)) {
             var epic = getEpicById(id);
             for (Subtask task : epic.getSubtasks()) {
                 subtasks.remove(task.getId());
@@ -207,8 +172,7 @@ public class TaskManager {
     }
 
     public void deleteSubtaskById(int id) {
-        boolean isSubtaskKeyExist = subtasks.containsKey(id);
-        if (isSubtaskKeyExist) {
+        if (subtasks.containsKey(id)) {
             Subtask task = getSubtaskById(id);
             int epicId = task.getEpicId();
             Epic epic = epics.get(epicId);

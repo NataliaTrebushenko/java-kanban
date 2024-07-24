@@ -18,15 +18,15 @@ public class Main {
         taskManager.createEpic(epic1);
         Subtask sub1 = new Subtask("Собрать коробки", "Аккуратно сложить вещи", epic1.getId());
         Subtask sub2 = new Subtask("Закрыть коробки", "Заклеить коробки и отнести их в машину", epic1.getId());
-        epic1.createSubtask(sub1);
+        epic1.addSubtask(sub1);
         taskManager.createSubtask(sub1);
-        epic1.createSubtask(sub2);
+        epic1.addSubtask(sub2);
         taskManager.createSubtask(sub2);
 
         Epic epic2 = new Epic("Попрощаться", "Со старым домом");
         taskManager.createEpic(epic2);
         Subtask sub3 = new Subtask("Кошка!", "Хорошо что мяукнула, куда же без тебя!", epic2.getId());
-        epic2.createSubtask(sub3);
+        epic2.addSubtask(sub3);
         taskManager.createSubtask(sub3);
 
         System.out.println("Список задач:");
