@@ -6,9 +6,9 @@ import models.Task;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public interface TaskManager {
-    int getId();
 
     Collection<Task> getTasks();
 
@@ -40,7 +40,6 @@ public interface TaskManager {
 
     void updateSubtask(Subtask subtask);
 
-    void updateEpicStatus(Epic epic);
 
     void deleteTaskById(int id);
 
@@ -50,6 +49,6 @@ public interface TaskManager {
 
     Collection<Subtask> getEpicSubtasks(int epicId);
 
-    ArrayList<Task> getHistoryList();
+    List<Task> getHistoryList();
 
 }

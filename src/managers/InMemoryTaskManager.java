@@ -5,9 +5,9 @@ import models.Subtask;
 import models.Task;
 import models.TaskStatus;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -18,8 +18,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int id = 0;
 
-    @Override
-    public int getId() {
+    private int getId() {
         id++;
         return id;
     }
@@ -147,8 +146,7 @@ public class InMemoryTaskManager implements TaskManager {
         updateEpicStatus(epic);
     }
 
-    @Override
-    public void updateEpicStatus(Epic epic) {
+    private void updateEpicStatus(Epic epic) {
         if (epic == null) {
             System.out.println("Не передано.");
             return;
@@ -219,9 +217,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getHistoryList() {
+    public List<Task> getHistoryList() {
         return historyManager.getHistoryList();
     }
-
 
 }
