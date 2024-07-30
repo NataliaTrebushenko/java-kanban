@@ -1,4 +1,6 @@
+import managers.Managers;
 import managers.TaskManager;
+import managers.InMemoryTaskManager;
 import models.Epic;
 import models.Subtask;
 import models.Task;
@@ -7,7 +9,7 @@ import models.TaskStatus;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = Managers.getDefault();
 
         Task task1 = new Task("Проснуться", "Встать с кровати");
         taskManager.createTask(task1);
@@ -72,6 +74,8 @@ public class Main {
             System.out.println(subtask.getName() + " " + subtask.getStatus() + " " + subtask.getId());
         }
 
+        printAllTasks(taskManager);
+
         System.out.println("Удаление всех tasks.Task, tasks.Epic, tasks.Subtask");
 
         taskManager.deleteTaskAll();
@@ -82,5 +86,29 @@ public class Main {
 
         taskManager.deleteSubtaskAll();
         System.out.println("После удаления размер tasks.Subtask= " + taskManager.getSubtasks().size());
+    }
+
+    private static void printAllTasks(TaskManager manager) {
+        System.out.println("Задачи:");
+        for (Task task : manager.getTasks()) {
+            System.out.println(task);
+        }
+        System.out.println("Эпики:");
+        for (Task epic : manager.getEpics()) {
+            System.out.println(epic);
+
+            for (Task task : manager.getEpicSubtasks(epic.getId())) {
+                System.out.println("--> " + task);
+            }
+        }
+        System.out.println("Подзадачи:");
+        for (Task subtask : manager.getSubtasks()) {
+            System.out.println(subtask);
+        }
+
+        System.out.println("История:");
+        for (Task task : manager.getHistoryList()) {
+            System.out.println(task);
+        }
     }
 }
